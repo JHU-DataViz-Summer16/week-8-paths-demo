@@ -132,6 +132,18 @@ DirectedScatterPlot.prototype.update = function (data) {
         })
         .text(function(d){ return d.year });
 
+    // Use d3.line to create a line function that we will use to pass data to our our path's d attribute
+    var line = d3.line()
+        .x(function(d) { return chart.xScale(d.fam_child_pov); })
+        .y(function(d) { return chart.yScale(d.tanf_fam); });
+
+    // Append a new path to the svg, using .datum() since we are binding all of our data to one new path element. We also pass the line variable to the "d" attribute. 
+    chart.svg.append("path")
+        .datum(full)
+        .attr("class", "line")
+        .attr("d", line);
+
+
 };	
 
 
