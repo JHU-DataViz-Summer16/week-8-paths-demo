@@ -69,6 +69,7 @@ DirectedScatterPlot.prototype.update = function (data) {
 
     chart.svg.selectAll(".circ").remove();
     chart.svg.selectAll(".year_note").remove();
+    chart.svg.selectAll(".line").remove();
 
     chart.svg.append("g")
         .attr("transform", function(){ return "translate(0," + height + ")" })
