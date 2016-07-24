@@ -140,7 +140,8 @@ DirectedScatterPlot.prototype.update = function (data) {
         .transition()
         .delay(function (d,i){ return (i * 50) })
         .duration(2000)
-        .ease(d3.easePoly.exponent(3))
+        .ease(d3.easePoly.exponent(3)) 
+        // Many more eases here: https://github.com/d3/d3/blob/master/API.md#easings-d3-ease
         .attr("opacity",1);
 
 
@@ -149,6 +150,8 @@ DirectedScatterPlot.prototype.update = function (data) {
         .x(function(d) { return chart.xScale(d.fam_child_pov); })
         .y(function(d) { return chart.yScale(d.tanf_fam); })
         .curve(d3.curveCatmullRom.alpha(0.7));
+        // You can see the other curves here:
+        // https://github.com/d3/d3/blob/master/API.md#curves
 
     // Append a new path to the svg, using .datum() since we are binding all of our data to one new path element. We also pass the line variable to the "d" attribute. 
     chart.svg.append("path")
@@ -198,9 +201,24 @@ function Choropleth(change, states){
 
     chart.states = states;
 
+    // Create a projection with geoAlbersUSA
+    // Many more geographic projections available here:
+    // https://github.com/d3/d3/blob/master/API.md#projections
 
-    // Map code starts here!
+    // First create a map projection and specify some options:
+    var projection = d3.geoAlbersUsa()
+       .translate([width/2, height/2])// Places the map in the center of the SVG
+       .scale([width * 1.5]); // Scales the size of the map
 
+    // Then pass this projection to d3.geoPath() - which is analagous to d3.line()
+    var projectionPath = d3.geoPath().projection(projection);
+
+    // Now we have this projection path that we can give to the "d" attribute of a new path:
+    chart.map = chart.svg.append("g").attr("transform", "translate(0,30)").selectAll("path")
+        .data(chart.states.features)
+        .enter()
+        .append("path")
+        .attr("d", projectionPath)
 
 
     };
