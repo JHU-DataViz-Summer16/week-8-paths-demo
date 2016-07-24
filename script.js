@@ -20,15 +20,12 @@ d3.queue()
   });
 
 
-
 var margin = {
 	left: 75,
 	right: 50,
 	top: 50,
 	bottom: 75
 };
-
-
 
 
 var width = 625 - margin.left - margin.right;
@@ -159,13 +156,10 @@ DirectedScatterPlot.prototype.update = function (data) {
         .attr("class", "line")
         .attr("d", line)
         .style("opacity",0)
-        .transition().delay(2000).duration(1000)
+        .transition().delay(2000).duration(1000).on("end", function(){ map.update(); })
         .style("opacity", 1);
 
 };	
-
-
-
 
 
 function Choropleth(change, states){
@@ -201,7 +195,15 @@ function Choropleth(change, states){
 
     chart.states = states;
 
-    // Create a simple color scale matching the state values (which are a ratio, thus largely being between 0 and 100):
+};
+
+
+Choropleth.prototype.update = function () {
+
+    var chart = this;
+
+    chart.svg.selectAll(".map").remove();
+
     chart.colorScale = d3.scaleLinear()
         .domain([0,100])
         .range(["#d73027","#4575b4"]);
@@ -223,6 +225,7 @@ function Choropleth(change, states){
         .data(chart.states.features)
         .enter()
         .append("path")
+        .attr("class", "map")
         .attr("d", projectionPath)
         .attr("stroke", "black")
         .attr("fill", function(d){ 
@@ -233,9 +236,9 @@ function Choropleth(change, states){
             return chart.colorScale(d.properties.value_2014);
         })
 
-
     };
 };
+
 
 
 
