@@ -201,6 +201,11 @@ function Choropleth(change, states){
 
     chart.states = states;
 
+    // Create a simple color scale matching the state values (which are a ratio, thus largely being between 0 and 100):
+    chart.colorScale = d3.scaleLinear()
+        .domain([0,100])
+        .range(["#d73027","#4575b4"]);
+
     // Create a projection with geoAlbersUSA
     // Many more geographic projections available here:
     // https://github.com/d3/d3/blob/master/API.md#projections
@@ -219,6 +224,12 @@ function Choropleth(change, states){
         .enter()
         .append("path")
         .attr("d", projectionPath)
+        .attr("stroke", "black")
+        .attr("fill", function(d){ 
+            return chart.colorScale(d.properties.value_1995);
+        })
+
+
 
 
     };
