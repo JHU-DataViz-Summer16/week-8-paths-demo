@@ -68,6 +68,13 @@ DirectedScatterPlot.prototype.update = function (data) {
     chart.svg.selectAll(".year_note").remove();
     chart.svg.selectAll(".line").remove();
 
+    // Remove existing map on reset:
+    d3.select("#chart2").selectAll("path").remove();
+
+    // Interrupt ongoing transitions:
+    chart.svg.selectAll("*").interrupt();
+
+
     chart.svg.append("g")
         .attr("transform", function(){ return "translate(0," + height + ")" })
         .attr("class", "axis")
@@ -202,7 +209,8 @@ Choropleth.prototype.update = function () {
 
     var chart = this;
 
-    chart.svg.selectAll(".map").remove();
+    // Interrupt ongoing transitions:  
+    chart.svg.selectAll("*").interrupt();
 
     chart.colorScale = d3.scaleLinear()
         .domain([0,100])
