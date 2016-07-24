@@ -228,8 +228,10 @@ function Choropleth(change, states){
         .attr("fill", function(d){ 
             return chart.colorScale(d.properties.value_1995);
         })
-
-
+        .transition().duration(5000)
+        .style("fill", function(d){
+            return chart.colorScale(d.properties.value_2014);
+        })
 
 
     };
