@@ -102,6 +102,10 @@ DirectedScatterPlot.prototype.update = function (data) {
     	.attr("class", "circ")
     	.attr("cx", function(d){ return chart.xScale(d.fam_child_pov) })
     	.attr("cy", function(d){ return chart.yScale(d.tanf_fam) })
+        .transition()
+        .delay(function (d,i){ return (i * 50) })
+        .duration(2000)
+        .ease(d3.easePoly.exponent(3))
         .attr("r", 8);
 
     chart.svg.selectAll(".year_note")
@@ -130,19 +134,29 @@ DirectedScatterPlot.prototype.update = function (data) {
             else if (d.year == 2013) { return 5 }
             else if (d.year == 2014) { return -3 }
         })
-        .text(function(d){ return d.year });
+        .text(function(d){ return d.year })
+        .attr("opacity",0)
+        .transition()
+        .delay(function (d,i){ return (i * 50) })
+        .duration(2000)
+        .ease(d3.easePoly.exponent(3))
+        .attr("opacity",1);
+
 
     // Use d3.line to create a line function that we will use to pass data to our our path's d attribute
     var line = d3.line()
         .x(function(d) { return chart.xScale(d.fam_child_pov); })
-        .y(function(d) { return chart.yScale(d.tanf_fam); });
+        .y(function(d) { return chart.yScale(d.tanf_fam); })
+        .curve(d3.curveCatmullRom.alpha(0.7));
 
     // Append a new path to the svg, using .datum() since we are binding all of our data to one new path element. We also pass the line variable to the "d" attribute. 
     chart.svg.append("path")
         .datum(full)
         .attr("class", "line")
-        .attr("d", line);
-
+        .attr("d", line)
+        .style("opacity",0)
+        .transition().delay(2000).duration(1000)
+        .style("opacity", 1);
 
 };	
 
